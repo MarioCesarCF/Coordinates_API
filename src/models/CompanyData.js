@@ -4,8 +4,8 @@ const CompanyDataSchema = new mongoose.Schema({
   name: String,
   cnpj: String,
   city: String,
-  coordenatesX: Number,
-  coordenatesY: Number,
+  coordinatesX: Number,
+  coordinatesY: Number,
   informations: String,
 });
 

@@ -1,5 +1,6 @@
 const express = require('express');
 const routes = require('./routes');
+require('dotenv').config();
 
 const app = express();
 require('./config/dbConfig');
@@ -7,4 +8,7 @@ require('./config/dbConfig');
 app.use(express.json());
 app.use(routes);
 
-app.listen(3000, () => { console.log('Listen port 3000') });
+const port = process.env.PORT || 27017;
+
+app.listen(port, () => {console.log(`App listen port ${port}`)})
+

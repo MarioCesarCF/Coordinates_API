@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const connection = async () => {
-  const URL = process.env.DATABASE_URL;
+  const uri = process.env.DATABASE_URL;
   if (global.connection && global.connection.state !== 'disconnected') {
     return global.connection;
   }
   mongoose.set('strictQuery', true);
 
-  mongoose.connect(URL, {
+  mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   });

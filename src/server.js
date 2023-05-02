@@ -1,16 +1,22 @@
-const express = require('express');
-const routes = require('./routes');
-require('dotenv').config();
+import express from "express";
+import connection from "./config/dbConfig.js";
+import dotenv from "dotenv";
+import cors from "cors";
+
+import companyRoute from "./routes/company.route.js";
+import documenRoute from "./routes/documents.route.js";
+
+dotenv.config();
 
 const app = express();
-require('./config/dbConfig');
+const port = process.env.PORT || 27017;
+app.use(cors());
+
+connection();
 
 app.use(express.json());
-app.use(routes);
+app.use("/company", companyRoute);
+app.use("/document", documenRoute);
 
-//port padrão
-const port = process.env.PORT || 27017;
-
-//hospedagem no azure
-app.listen(port, () => {console.log(`App listen port ${port}`)})
+app.listen(port, () => { console.log(`App listen port ${port}`) })
 

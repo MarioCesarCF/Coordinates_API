@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const CompanyDataSchema = new mongoose.Schema({
   name: String,
@@ -9,4 +9,6 @@ const CompanyDataSchema = new mongoose.Schema({
   informations: String,
 });
 
-module.exports = mongoose.model('Companies', CompanyDataSchema);
+const Company = mongoose.model("Companies", CompanyDataSchema);
+
+export default Company;

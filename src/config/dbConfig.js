@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const connection = async () => {
   const uri = process.env.DATABASE_URL;
+  
   if (global.connection && global.connection.state !== "disconnected") {
     return global.connection;
   }
@@ -24,7 +25,5 @@ const connection = async () => {
 
   global.connection = db;
 };
-
-connection();
 
 export default connection;

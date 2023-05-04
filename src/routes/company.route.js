@@ -7,9 +7,9 @@ import {
   excludes,
   findByName,
   findByCnpj,
-  findByCity,
+  findByCity
 } from "../controllers/company.controller.js";
-
+ 
 router.get("/companies", show);
 router.post("/companies", create);
 router.delete("/companies/:id", excludes);

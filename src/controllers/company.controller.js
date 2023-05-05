@@ -2,7 +2,7 @@ import {
   createCompany,
   getAll,
   getByCity,
-  getByCnpj,
+  getByCnpjCpf,
   getByName,
   deleteCompany,
 } from "../services/company.service.js";
@@ -18,18 +18,24 @@ export const show = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const { name, cnpj, city, coordinatesX, coordinatesY, informations } =
+    const { name, cnpj_cpf, city, coordinatesX, coordinatesY, informations } =
       req.body;
 
-    if (!name || !cnpj || !city || !coordinatesX || !coordinatesY) {
+    if (!name || !cnpj_cpf || !city || !coordinatesX || !coordinatesY) {
       return res
         .status(400)
-        .json({ error: "Nome, CNPJ, Cidade e Coordenadas são obrigatórios." });
+        .json({ error: "Nome, CNPJ/CPF, Cidade e Coordenadas são obrigatórios." });
+    }
+
+    if (cnpj_cpf.length !== 11 && cnpj_cpf.length !== 14) {
+      return res.status(400).json({
+        error: "Informe um número de documento válido. Informe apenas números.",
+      });
     }
 
     const company = await createCompany({
       name,
-      cnpj,
+      cnpj_cpf,
       city,
       coordinatesX,
       coordinatesY,
@@ -78,19 +84,29 @@ export const findByName = async (req, res) => {
   }
 };
 
-export const findByCnpj = async (req, res) => {
+export const findByCnpjCpf = async (req, res) => {
   try {
-    const { cnpj } = req.params;
+    const { cnpj_cpf } = req.params;
+    if (cnpj_cpf.length !== 11 && cnpj_cpf.length !== 14) {
+      return res
+        .status(401)
+        .json({ error: "Informe um número de CNPJ/CPF válido (Apenas números)." });
+    }
 
-    const companyCnpj = await getByCnpj({ cnpj: cnpj });
-
-    if (companyCnpj) {
+    const companyCnpj = await getByCnpjCpf({ cnpj_cpf: cnpj_cpf });
+   
+    if (companyCnpj === []) {
+      return res
+      .status(401)
+      .json({ error: "Empresa com este CNPJ/CPF não encontrada." });
+    }
+    else if (companyCnpj) {
       return res.status(200).json({ data: companyCnpj, status: "Success" });
     }
 
     return res
       .status(401)
-      .json({ error: "Empresa com este CNPJ não encontrada." });
+      .json({ error: "Empresa com este CNPJ/CPF não encontrada." });
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
@@ -113,3 +129,5 @@ export const findByCity = async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 };
+
+export default { show, create, excludes, findByName, findByCnpjCpf, findByCity };

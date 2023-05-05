@@ -12,8 +12,8 @@ export const getByName = async ({ name }) => {
   return await Company.find({ name });
 };
 
-export const getByCnpj = async ({ cnpj }) => {
-  return await Company.find({ cnpj });
+export const getByCnpjCpf = async ({ cnpj_cpf }) => {
+  return await Company.find({ cnpj_cpf });
 };
 
 export const getByCity = async ({ city }) => {

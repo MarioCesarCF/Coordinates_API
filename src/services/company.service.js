@@ -86,27 +86,32 @@ class CompanyService {
     return company;
   };
 
-  //parei aqui
-  updateService = async (body, companyId) => {};
+  update = async (body, companyId) => {
+    const { name, document, city, coordinatesX, coordinatesY, informations } =
+      body;
 
-  excludes = async (req, res) => {
-    try {
-      const { id } = req.params;
+    if (!name && !document && !city && !coordinatesX && !coordinatesY)
+      throw new Error("Envie um ou mais campos para atualização.");
 
-      const companyDeleted = await deleteCompany(id);
+    const company = await companyRepository.getById(companyId);
 
-      if (companyDeleted) {
-        return res
-          .status(200)
-          .json({ data: companyDeleted, status: "Success" });
-      }
+    if (company.id != companyId)
+      throw new Error("Você não pode atualizar os dados dessa empresa.");
 
-      return res
-        .status(401)
-        .json({ error: "Não foi encontrado o registro para deletar." });
-    } catch (err) {
-      res.status(500).send({ message: err.message });
-    }
+    await companyRepository.updateComapny(companyId, body);
+
+    return { message: "Dados da empresa atualizados com sucesso." };
+  };
+
+  excludes = async (companyId) => {
+    const company = await companyRepository.getById(companyId);
+
+    if (company.id != companyId)
+      throw new Error("Você não pode deletar os dados dessa empresa.");
+
+    await companyRepository.deleteCompany(companyId);
+
+    return { message: "Empresa deletada com sucesso." };
   };
 }
 

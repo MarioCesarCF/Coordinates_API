@@ -11,6 +11,8 @@ class CompanyRepository {
 
   getByCity = ({ city }) => Company.find({ $text: { $search: `\"${city}"` } });
 
+  getById = (id) => Company.findById(id);
+
   updateComapny = (id, body) =>
     Company.findOneAndUpdate(
       { _id: id },

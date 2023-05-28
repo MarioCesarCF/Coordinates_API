@@ -57,23 +57,28 @@ class CompanyController {
     }
   };
 
-  excludes = async (req, res) => {
+  updateCompany = async (req, res) => {
+    const body = req.body;
+    const { id: companyId } = req.params;
+
     try {
-      const { id } = req.params;
+      const response = await companyService.update(body, companyId);
 
-      const companyDeleted = await deleteCompany(id);
-
-      if (companyDeleted) {
-        return res
-          .status(200)
-          .json({ data: companyDeleted, status: "Success" });
-      }
-
-      return res
-        .status(401)
-        .json({ error: "Não foi encontrado o registro para deletar." });
+      return res.send(response);
     } catch (err) {
-      res.status(500).send({ message: err.message });
+      return res.status(500).send(err.message);
+    }
+  };
+
+  deleteCompany = async (req, res) => {
+    const { id: companyId } = req.params;
+    
+    try {
+      const company = await companyService.excludes(companyId);
+
+      return res.send(company);
+    } catch (err) {
+      return res.status(500).send({ message: err.message });
     }
   };
 }

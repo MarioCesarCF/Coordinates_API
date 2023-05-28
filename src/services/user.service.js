@@ -79,7 +79,7 @@ class UserService {
     const user = await userRepository.findByIdRepository(userId);
 
     if (user.id != userId)
-      throw new Error("Você não pode atualizar este usuário.");
+      throw new Error("Você não pode deletar este usuário.");
 
     await userRepository.deleteRepository(userId);
 

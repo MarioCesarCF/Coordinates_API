@@ -10,8 +10,6 @@ class UserService {
     if (!name || !email || !password || !document || !usertype)
       throw new Error("Preencha todos os campos obrigatórios ao registro.");
 
-    console.log(email);
-
     const fouderUser = await userRepository.findByEmailRepository(email);
 
     if (fouderUser) throw new Error("Usuário já existe.");

@@ -5,7 +5,7 @@ const CompanyDataSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  cnpj_cpf: {
+  document: {
     type: String,
     required: true,
   },
@@ -28,11 +28,11 @@ const CompanyDataSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
+  // user: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User",
+  //   required: true,
+  // },
 });
 
 const Company = mongoose.model("Companies", CompanyDataSchema);

@@ -1,143 +1,113 @@
-import {
-  createCompany,
-  getAll,
-  getByCity,
-  getByCnpjCpf,
-  getByName,
-  deleteCompany,
-} from "../services/company.service.js";
+import CompanyRepository from "../repositories/company.repository.js";
 
-export const show = async (req, res) => {
-  try {
-    const companiesList = await getAll();
-    return res.status(200).json({ data: companiesList, status: "success" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+const companyRepository = new CompanyRepository();
 
-export const create = async (req, res) => {
-  try {
-    const { name, cnpj_cpf, city, coordinatesX, coordinatesY, informations } =
-      req.body;
+class CompanyService {
+  create = async (body) => {
+    const { name, document, city, coordinatesX, coordinatesY, informations } =
+      body;
 
-    if (!name || !cnpj_cpf || !city || !coordinatesX || !coordinatesY) {
-      return res
-        .status(400)
-        .json({
-          error: "Nome, CNPJ/CPF, Cidade e Coordenadas são obrigatórios.",
-        });
+    if (!name || !document || !city || !coordinatesX || !coordinatesY)
+      throw new Error("Nome, CNPJ/CPF, Cidade e Coordenadas são obrigatórios.");
+
+    const documentIsNaN = isNaN(document);
+
+    if ((document.length !== 11 && document.length !== 14) || documentIsNaN)
+      throw new Error(
+        "Informe um número de documento válido. Informe apenas números."
+      );
+
+    const company = await companyRepository.createCompany(body);
+
+    return {
+      message: "Cliente cadastrado com sucesso.",
+      company: {
+        name,
+        document,
+        city,
+        coordinatesX,
+        coordinatesY,
+        informations,
+      },
+    };
+  };
+
+  showAllCompany = async () => {
+    const companiesList = await companyRepository.getAllCompanies();
+
+    if (companiesList.length === 0)
+      throw new Error("Não há clientes cadastrados.");
+
+    return companiesList;
+  };
+
+  findByName = async (nameParam) => {
+    const name = nameParam;
+
+    const company = await companyRepository.getByName({ name: name });
+
+    if (company === []) {
+      throw new Error("Empresa com este nome não encontrada.");
     }
 
-    if (cnpj_cpf.length !== 11 && cnpj_cpf.length !== 14) {
-      return res.status(400).json({
-        error: "Informe um número de documento válido. Informe apenas números.",
-      });
-    }
+    return company;
+  };
 
-    const company = await createCompany({
-      name,
-      cnpj_cpf,
-      city,
-      coordinatesX,
-      coordinatesY,
-      informations,
+  findByDoc = async (docParam) => {
+    const document = docParam;
+
+    const documentIsNaN = isNaN(document);
+
+    if ((document.length !== 11 && document.length !== 14) || documentIsNaN)
+      throw new Error(
+        "Informe um número de documento válido. Informe apenas números."
+      );
+
+    const company = await companyRepository.getByDocument({
+      document: document,
     });
 
-    res.status(201).send(company);
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
-
-export const excludes = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const companyDeleted = await deleteCompany(id);
-
-    if (companyDeleted) {
-      return res.status(200).json({ data: companyDeleted, status: "Success" });
+    if (company === []) {
+      throw new Error("Empresa com este CNPJ/CPF não encontrada.");
     }
 
-    return res
-      .status(401)
-      .json({ error: "Não foi encontrado o registro para deletar." });
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
+    return company;
+  };
 
-export const findByName = async (req, res) => {
-  try {
-    const { name } = req.params;
+  findByCity = async (cityParam) => {
+    const city = cityParam;
 
-    const companyName = await getByName({ name: name });
+    const company = await companyRepository.getByCity({ city: city });
 
-    if (companyName) {
-      return res.status(200).json({ data: companyName, status: "Success" });
+    if (company === []) {
+      throw new Error("Nenhuma empresa encontrada nesta cidade.");
     }
 
-    return res
-      .status(401)
-      .json({ error: "Empresa com este nome não encontrada." });
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
+    return company;
+  };
 
-export const findByCnpjCpf = async (req, res) => {
-  try {
-    const { cnpj_cpf } = req.params;
-    if (cnpj_cpf.length !== 11 && cnpj_cpf.length !== 14) {
+  //parei aqui
+  updateService = async (body, companyId) => {};
+
+  excludes = async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const companyDeleted = await deleteCompany(id);
+
+      if (companyDeleted) {
+        return res
+          .status(200)
+          .json({ data: companyDeleted, status: "Success" });
+      }
+
       return res
         .status(401)
-        .json({
-          error: "Informe um número de CNPJ/CPF válido (Apenas números).",
-        });
+        .json({ error: "Não foi encontrado o registro para deletar." });
+    } catch (err) {
+      res.status(500).send({ message: err.message });
     }
+  };
+}
 
-    const companyCnpj = await getByCnpjCpf({ cnpj_cpf: cnpj_cpf });
-
-    if (companyCnpj === []) {
-      return res
-        .status(401)
-        .json({ error: "Empresa com este CNPJ/CPF não encontrada." });
-    } else if (companyCnpj) {
-      return res.status(200).json({ data: companyCnpj, status: "Success" });
-    }
-
-    return res
-      .status(401)
-      .json({ error: "Empresa com este CNPJ/CPF não encontrada." });
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
-
-export const findByCity = async (req, res) => {
-  try {
-    const { city } = req.params;
-
-    const companyCity = await getByCity({ city: city });
-
-    if (companyCity) {
-      return res.status(200).json({ data: companyCity, status: "Success" });
-    }
-
-    return res
-      .status(401)
-      .json({ error: "Empresa não encontrada na cidade informada." });
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
-
-export default {
-  show,
-  create,
-  excludes,
-  findByName,
-  findByCnpjCpf,
-  findByCity,
-};
+export default CompanyService;

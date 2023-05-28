@@ -18,7 +18,7 @@ const CompanyDataSchema = new mongoose.Schema({
     required: true,
   },
   coordinatesY: {
-    type: String,
+    type: Number,
     required: true,
   },
   informations: {

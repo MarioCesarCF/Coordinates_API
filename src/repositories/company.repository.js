@@ -3,7 +3,10 @@ import Company from "../models/Companies.js";
 class CompanyRepository {
   createCompany = (company) => Company.create(company);
 
-  getAllCompanies = () => Company.find();
+  getAllCompanies = (offset, limit) =>
+    Company.find().sort({ _id: -1 }).skip(offset).limit(limit).populate("user");
+
+  countCompanies = () => Company.countDocuments();
 
   getByName = ({ name }) => Company.find({ $text: { $search: `\"${name}"` } });
 

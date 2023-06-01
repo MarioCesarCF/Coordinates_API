@@ -12,7 +12,14 @@ class UserService {
 
     const fouderUser = await userRepository.findByEmailRepository(email);
 
-    if (fouderUser) throw new Error("Usuário já existe.");
+    if (fouderUser) throw new Error("Usuário já existe.");  
+
+    const regex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*=+?<>])[0-9a-zA-Z!@#$%&*=+?<>]{8,}$/g;
+
+    if (!password.match(regex)) throw new Error(
+      "Use uma senha forte, com: pelo menos 8 caracteres, 1 letra minúscula, 1 letra maiúscula, 1 número e um caractere especial (!@#$%&*<>:;?+=)"
+    );
 
     const user = await userRepository.createRepository(body);
 
@@ -36,7 +43,7 @@ class UserService {
     if (users.length === 0) throw new Error("Não há usuarios cadastrados.");
 
     return users;
-  };
+  };  
 
   findById = async (userId, userIdLogged) => {
     let idParam;
@@ -52,6 +59,7 @@ class UserService {
 
     const user = await userRepository.findByIdRepository(idParam);
 
+    console.log(user)
     return user;
   };
 
@@ -65,6 +73,14 @@ class UserService {
 
     if (user.id != userId)
       throw new Error("Você não pode atualizar este usuário.");
+
+    const regex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*=+?<>])[0-9a-zA-Z!@#$%&*=+?<>]{8,}$/g;
+
+    if (!password.match(regex))
+      throw new Error(
+        "Use uma senha forte, com: pelo menos 8 caracteres, 1 letra minúscula, 1 letra maiúscula, 1 número e um caractere especial (!@#$%&*<>:;?+=)"
+      );
 
     if (password) {
       body.password = await bcrypt.hash(password, 10);

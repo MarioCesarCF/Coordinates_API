@@ -1,11 +1,20 @@
 import CompanyRepository from "../repositories/company.repository.js";
+import UserRepository from "../repositories/user.repository.js";
 
 const companyRepository = new CompanyRepository();
+const userRepository = new UserRepository();
 
 class CompanyService {
   create = async (body) => {
-    const { name, document, city, coordinatesX, coordinatesY, informations } =
-      body;
+    const {
+      name,
+      document,
+      city,
+      coordinatesX,
+      coordinatesY,
+      informations,
+    } = body;
+
 
     if (!name || !document || !city || !coordinatesX || !coordinatesY)
       throw new Error("Nome, CNPJ/CPF, Cidade e Coordenadas são obrigatórios.");
@@ -17,7 +26,12 @@ class CompanyService {
         "Informe um número de documento válido. Informe apenas números."
       );
 
-    const company = await companyRepository.createCompany(body);
+    const user = await userRepository.findByIdRepository(body.user);
+
+    //Conferir ao usar o método no front se é fácil passar o userId por parametro no body
+    body.user = user;
+
+    await companyRepository.createCompany(body);
 
     return {
       message: "Cliente cadastrado com sucesso.",
@@ -32,13 +46,44 @@ class CompanyService {
     };
   };
 
-  showAllCompany = async () => {
-    const companiesList = await companyRepository.getAllCompanies();
+  showAllCompany = async (offset, limit, currentUrl) => {
+    const companiesList = await companyRepository.getAllCompanies(
+      offset,
+      limit
+    );
+    const total = await companyRepository.countCompanies();
+    
+    const next = offset + limit;
+    const nextUrl =
+      next < total ? `${currentUrl}?limit=${limit}&offset${next}` : null;
+    const previous = offset - limit < 0 ? null : offset - limit;
+    const previousUrl =
+      previous != null
+        ? `${currentUrl}?limit=${limit}&offset=${previous}`
+        : null;
 
     if (companiesList.length === 0)
       throw new Error("Não há clientes cadastrados.");
 
-    return companiesList;
+    const pageData = {
+      nextUrl,
+      previousUrl,
+      limit,
+      offset,
+      total,
+      results: companiesList.map((item) => ({
+        id: item._id,
+        name: item.name,
+        document: item.document,
+        city: item.city,
+        coordinatesX: item.coordinatesX,
+        coordinatesY: item.coordinatesY,
+        informations: item.informations,
+        nameUser: item.user.name,
+      })),
+    };
+
+    return pageData;
   };
 
   findByName = async (nameParam) => {
@@ -46,7 +91,7 @@ class CompanyService {
 
     const company = await companyRepository.getByName({ name: name });
 
-    if (company === []) {
+    if (company.length === 0) {
       throw new Error("Empresa com este nome não encontrada.");
     }
 
@@ -67,7 +112,7 @@ class CompanyService {
       document: document,
     });
 
-    if (company === []) {
+    if (company.length === 0) {
       throw new Error("Empresa com este CNPJ/CPF não encontrada.");
     }
 
@@ -79,7 +124,7 @@ class CompanyService {
 
     const company = await companyRepository.getByCity({ city: city });
 
-    if (company === []) {
+    if (company.length === 0) {
       throw new Error("Nenhuma empresa encontrada nesta cidade.");
     }
 

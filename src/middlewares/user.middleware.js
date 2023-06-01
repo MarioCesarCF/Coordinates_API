@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
-import userRepository from "../repositories/user.repository.js";
+import UserRepository from "../repositories/user.repository.js";
+
+const userRepository = new UserRepository();
 
 export const validId = (req, res, next) => {
   try {
@@ -11,7 +13,7 @@ export const validId = (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    res.status(500).send({ message: error.message + "2" });
   }
 };
 
@@ -30,6 +32,6 @@ export const validUser = async (req, res, next) => {
 
     next();
    } catch (error) {
-    res.status(500).send({ message: error.message });
+    res.status(500).send({ message: error.message + "3" });
   }
 }

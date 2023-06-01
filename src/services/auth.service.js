@@ -1,8 +1,22 @@
-import User from "../models/User.js";
-import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import LoginRepository from "../repositories/auth.repository.js";
 
-const loginService = async (email) => User.findOne({ email: email }).select("+password");
+const loginRepository = new LoginRepository();
 
-const generateToken = (id) => jwt.sign({ id: id }, process.env.KEY_TOKEN, { expiresIn: 86400 });
+class LoginService {
+  login = async (email, password) => {
+    const user = await loginRepository.loginRepository(email);
 
-export { loginService, generateToken };
+    if (!user) throw new Error("Email ou senha inválidos.");
+    
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+
+    if (!passwordIsValid) throw new Error("Email ou senha inválidos.");
+
+    const token = loginRepository.generateToken(user.id);
+
+    return token;
+  };
+}
+
+export default LoginService;

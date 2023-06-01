@@ -5,6 +5,8 @@ const companyService = new CompanyService();
 class CompanyController {
   createCompany = async (req, res) => {
     const body = req.body;
+    body.user = req.userId;
+    
     try {
       const company = await companyService.create(body);
 
@@ -16,7 +18,25 @@ class CompanyController {
 
   showCompanies = async (req, res) => {
     try {
-      const companies = await companyService.showAllCompany();
+      const currentUrl = req.baseUrl;
+      let { limit, offset } = req.query;
+
+      limit = Number(limit);
+      offset = Number(offset);
+
+      if (!limit) {
+        limit = 5;
+      }
+
+      if (!offset) {
+        offset = 0;
+      }
+
+      const companies = await companyService.showAllCompany(
+        offset,
+        limit,
+        currentUrl
+      );
 
       return res.status(200).send(companies);
     } catch (err) {

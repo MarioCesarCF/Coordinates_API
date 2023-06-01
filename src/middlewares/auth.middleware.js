@@ -1,50 +1,54 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import jwt from "jsonwebtoken";
-import userService from "../services/user.service.js";
+import UserRepository from "../repositories/user.repository.js";
 
-dotenv.config();
+const userRepository = new UserRepository();
 
-export const authMiddleware = (req, res, next) => {
-  try {
-    const { authorization } = req.headers;
+class AuthMiddleware {
+  authentication = (req, res, next) => {
+    try {
+      const { authorization } = req.headers;
 
-    if (!authorization) {
-      return res.send(401);
-    }
-
-    //dividindo as partes do headers 'Bearer' e 'token'
-    const parts = authorization.split(" ");
-
-    if (parts.length !== 2) {
-      return res.send(401);
-    }
-
-    //fazendo a destruturação do array parts
-    const [schema, token] = parts;
-
-    if (schema !== "Bearer") {
-      return res
-        .status(401)
-        .send({ message: " Word Bearer not found in headers." });
-    }
-
-    jwt.verify(token, process.env.KEY_TOKEN, async (error, decoded) => {
-      if (error) {
-        return res.status(401).send({ message: "Token invalid!" });
+      if (!authorization) {
+        return res.send(401);
       }
 
-      const user = await userService.findByIdService(decoded.id);
+      //dividindo as partes do headers 'Bearer' e 'token'
+      const parts = authorization.split(" ");
 
-      if (!user || !user.id) {
-        return res.status(400).send({ mensage: "Token invalid!" });
+      if (parts.length !== 2) {
+        return res.send(401);
       }
 
-      req.userId = user.id;
+      //fazendo a destruturação do array parts
+      const [schema, token] = parts;
 
-      //Lembrar de colocar o next() dentro da função.
-      return next();
-    });
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
+      if (schema !== "Bearer") {
+        return res
+          .status(401)
+          .send({ message: "A palavra Bearer não foi encontrada no cabeçalho." });
+      }
+
+      jwt.verify(token, process.env.KEY_TOKEN, async (error, decoded) => {
+        if (error) {
+          return res.status(401).send({ message: "Token inválido!" });
+        }
+
+        const user = await userRepository.findByIdRepository(decoded.id);
+
+        if (!user || !user.id) {
+          return res.status(400).send({ mensage: "Token inválido!" });
+        }
+
+        req.userId = user.id;
+
+        //Lembrar de colocar o next() dentro da função.
+        return next();
+      });
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  };
+}
+
+export default AuthMiddleware;

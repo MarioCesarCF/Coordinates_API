@@ -8,12 +8,25 @@ class LoginService {
     const user = await loginRepository.loginRepository(email);
 
     if (!user) throw new Error("Email ou senha inválidos.");
-    
+
     const passwordIsValid = await bcrypt.compare(password, user.password);
 
     if (!passwordIsValid) throw new Error("Email ou senha inválidos.");
 
     const token = loginRepository.generateToken(user.id);
+
+    return token;
+  };
+  loginClient = async (email, password) => {
+    const client = await loginRepository.loginRepositoryClient(email);
+
+    if (!client) throw new Error("Email ou senha inválidos.");
+
+    const passwordIsValid = await bcrypt.compare(password, client.password);
+
+    if (!passwordIsValid) throw new Error("Email ou senha inválidos.");
+
+    const token = loginRepository.generateToken(client.id);
 
     return token;
   };

@@ -21,6 +21,10 @@ const CompanyDataSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  number_processo: {
+    type: String,
+    required: true,
+  },
   informations: {
     type: String,
   },

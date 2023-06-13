@@ -6,7 +6,7 @@ class CompanyController {
   createCompany = async (req, res) => {
     const body = req.body;
     body.user = req.userId;
-    
+
     try {
       const company = await companyService.create(body);
 
@@ -92,13 +92,24 @@ class CompanyController {
 
   deleteCompany = async (req, res) => {
     const { id: companyId } = req.params;
-    
+
     try {
       const company = await companyService.excludes(companyId);
 
       return res.send(company);
     } catch (err) {
       return res.status(500).send({ message: err.message });
+    }
+  };
+
+  findByNameClient = async (req, res) => {
+    const { name } = req.params;
+    try {
+      const company = await companyService.findByNameClient(name);
+
+      return res.status(200).send(company);
+    } catch (err) {
+      res.status(500).send({ message: err.message });
     }
   };
 }

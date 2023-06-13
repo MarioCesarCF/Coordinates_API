@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import UserRepository from "../repositories/user.repository.js";
+import ClientRepository from "../repositories/client.repository.js";
 
-const userRepository = new UserRepository();
+const clientRepository = new ClientRepository();
 
 export const validId = (req, res, next) => {
   try {
@@ -17,21 +17,21 @@ export const validId = (req, res, next) => {
   }
 };
 
-export const validUser = async (req, res, next) => {
+export const validClient = async (req, res, next) => {
   try {
     const id = req.params.id;
 
-    const user = await userRepository.findByIdRepository(id);
+    const client = await clientRepository.findByIdRepository(id);
 
-    if (!user || !user.id) {
-      return res.status(400).send({ message: "Usuario não encontrado!" });
+    if (!client || !client.id) {
+      return res.status(400).send({ message: "Cliente não encontrado!" });
     }
 
     req.id = id;
-    req.user = user;
+    req.client = client;
 
     next();
-   } catch (error) {
+  } catch (error) {
     res.status(500).send({ message: error.message });
   }
-}
+};

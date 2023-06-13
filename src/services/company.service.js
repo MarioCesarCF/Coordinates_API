@@ -12,9 +12,9 @@ class CompanyService {
       city,
       coordinatesX,
       coordinatesY,
+      number_processo,
       informations,
     } = body;
-
 
     if (!name || !document || !city || !coordinatesX || !coordinatesY)
       throw new Error("Nome, CNPJ/CPF, Cidade e Coordenadas são obrigatórios.");
@@ -41,6 +41,7 @@ class CompanyService {
         city,
         coordinatesX,
         coordinatesY,
+        number_processo,
         informations,
       },
     };
@@ -52,7 +53,7 @@ class CompanyService {
       limit
     );
     const total = await companyRepository.countCompanies();
-    
+
     const next = offset + limit;
     const nextUrl =
       next < total ? `${currentUrl}?limit=${limit}&offset${next}` : null;
@@ -78,6 +79,7 @@ class CompanyService {
         city: item.city,
         coordinatesX: item.coordinatesX,
         coordinatesY: item.coordinatesY,
+        number_processo: item.number_processo,
         informations: item.informations,
         nameUser: item.user.name,
       })),
@@ -157,6 +159,18 @@ class CompanyService {
     await companyRepository.deleteCompany(companyId);
 
     return { message: "Empresa deletada com sucesso." };
+  };
+
+  findByNameClient = async (nameParam) => {
+    const name = nameParam;
+
+    const company = await companyRepository.getByNameClient({ name: name });
+
+    if (company.length === 0) {
+      throw new Error("Empresa com este nome não encontrada.");
+    }
+
+    return company;
   };
 }
 

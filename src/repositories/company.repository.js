@@ -24,6 +24,8 @@ class CompanyRepository {
     );
 
   deleteCompany = (id) => Company.findByIdAndDelete(id);
+
+  getByNameClient = ({ name }) => Company.find({ name: name });
 }
 
 export default CompanyRepository;

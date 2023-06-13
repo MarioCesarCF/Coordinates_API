@@ -10,7 +10,7 @@ const authMiddleware = new AuthMiddleware();
 router.use(authMiddleware.authentication);
  
 router.get("/", companyController.showCompanies);
-router.post("/", authMiddleware.authentication, companyController.createCompany);
+router.post("/", companyController.createCompany);
 router.get("/name/:name", companyController.findByName);
 router.get("/doc/:document", companyController.findByCnpjCpf);
 router.get("/city/:city", companyController.findByCity);

@@ -44,6 +44,17 @@ class CompanyController {
     }
   };
 
+  findCompany = async (req, res) => {
+    const { id: companyId } = req.params;
+    try {
+      const company = await companyService.findById(companyId);
+
+      return res.status(200).send(company);
+    } catch (err) {
+      res.status(500).send({ message: err.message });
+    }
+  };
+
   findByName = async (req, res) => {
     const { name } = req.params;
     try {

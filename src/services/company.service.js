@@ -88,6 +88,18 @@ class CompanyService {
     return pageData;
   };
 
+  findById = async (nameParam) => {
+    const companyId = nameParam;
+
+    const company = await companyRepository.getById(companyId);
+
+    if (company.length === 0) {
+      throw new Error("Empresa não encontrada.");
+    }
+
+    return company;
+  };  
+
   findByName = async (nameParam) => {
     const name = nameParam;
 

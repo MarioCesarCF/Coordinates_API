@@ -10,7 +10,7 @@ class UserService {
     if (!name || !email || !password || !document || !usertype)
       throw new Error("Preencha todos os campos obrigatórios ao registro.");
 
-    const fouderUser = await userRepository.findByEmailRepository(email);
+    const fouderUser = await userRepository.findByEmail(email);
 
     if (fouderUser) throw new Error("Usuário já existe.");  
 
@@ -59,6 +59,18 @@ class UserService {
 
     const user = await userRepository.findByIdRepository(idParam);
 
+    return user;
+  };
+
+  findByEmail = async (userEmail) => {    
+    if (!userEmail)
+      throw new Error("Envie um id nos parâmetros para procurar o usuário.");
+
+    const user = await userRepository.findByEmail(userEmail);
+
+    if (!user)
+      throw new Error("Usuário não encontrado.");
+    
     return user;
   };
 

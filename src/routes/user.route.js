@@ -9,6 +9,7 @@ const userController = new UserController();
 route.post("/", userController.createUser);
 route.get("/", userController.findAllUsers);
 route.get("/:id", validId, validUser, userController.findUserById);
+route.get("/email/:email", userController.findUserByEmail);
 route.patch("/:id", validId, validUser, userController.updateUser);
 route.delete("/:id", validId, validUser, userController.deleteUser);
 

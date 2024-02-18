@@ -47,31 +47,19 @@ class CompanyService {
     };
   };
 
-  showAllCompany = async (offset, limit, currentUrl) => {
-    const companiesList = await companyRepository.getAllCompanies(
-      offset,
-      limit
-    );
-    const total = await companyRepository.countCompanies();
+  showAllCompany = async (name, document, city) => {
+    let query = {};
+  
+    if (name) query.name = name;
+    if (document) query.document = document;
+    if (city) query.city = city;
 
-    const next = offset + limit;
-    const nextUrl =
-      next < total ? `${currentUrl}?limit=${limit}&offset${next}` : null;
-    const previous = offset - limit < 0 ? null : offset - limit;
-    const previousUrl =
-      previous != null
-        ? `${currentUrl}?limit=${limit}&offset=${previous}`
-        : null;
-
+    const companiesList = await companyRepository.getAllCompanies(query);
+    
     if (companiesList.length === 0)
       throw new Error("Não há clientes cadastrados.");
 
     const pageData = {
-      nextUrl,
-      previousUrl,
-      limit,
-      offset,
-      total,
       results: companiesList.map((item) => ({
         id: item._id,
         name: item.name,

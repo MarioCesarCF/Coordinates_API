@@ -18,25 +18,8 @@ class CompanyController {
 
   showCompanies = async (req, res) => {
     try {
-      const currentUrl = req.baseUrl;
-      let { limit, offset } = req.query;
-
-      limit = Number(limit);
-      offset = Number(offset);
-
-      if (!limit) {
-        limit = 5;
-      }
-
-      if (!offset) {
-        offset = 0;
-      }
-
-      const companies = await companyService.showAllCompany(
-        offset,
-        limit,
-        currentUrl
-      );
+      const { name, document, city } = req.query;
+      const companies = await companyService.showAllCompany(name, document, city);
 
       return res.status(200).send(companies);
     } catch (err) {
@@ -102,8 +85,9 @@ class CompanyController {
   };
 
   deleteCompany = async (req, res) => {
-    const { id: companyId } = req.params;
+    const companyId = req.params.id;
 
+    console.log(companyId);
     try {
       const company = await companyService.excludes(companyId);
 

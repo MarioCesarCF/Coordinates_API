@@ -3,8 +3,8 @@ import Company from "../models/Companies.js";
 class CompanyRepository {
   createCompany = (company) => Company.create(company);
 
-  getAllCompanies = (offset, limit) =>
-    Company.find().sort({ _id: -1 }).skip(offset).limit(limit).populate("user");
+  getAllCompanies = (query) =>
+    Company.find(query).populate("user");
 
   countCompanies = () => Company.countDocuments();
 

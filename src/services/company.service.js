@@ -17,23 +17,25 @@ class CompanyService {
     } = body;
 
     if (!name || !document || !city || !coordinatesX || !coordinatesY)
-      throw new Error("Nome, CNPJ/CPF, Cidade e Coordenadas são obrigatórios.");
+      throw { status: 400, message: "Nome, CNPJ/CPF, Cidade e Coordenadas são obrigatórios." };
 
     const documentIsNaN = isNaN(document);
 
     if ((document.length !== 11 && document.length !== 14) || documentIsNaN)
-      throw new Error(
-        "Informe um número de documento válido. Informe apenas números."
-      );
+      throw { status: 400, message: "Informe um número de documento válido. Informe apenas números." };
 
     const user = await userRepository.findByIdRepository(body.user);
 
-    //Conferir ao usar o método no front se é fácil passar o userId por parametro no body
+    if (!user) {
+      throw { status: 404, message: "Usuário não encontrado." };
+    }
+
     body.user = user;
 
     await companyRepository.createCompany(body);
 
     return {
+      status: 201,
       message: "Cliente cadastrado com sucesso.",
       company: {
         name,

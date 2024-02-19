@@ -12,7 +12,11 @@ class CompanyController {
 
       return res.status(201).send(company);
     } catch (err) {
-      res.status(500).send({ message: err.message });
+      if (err.status && err.message) {
+        return res.status(err.status).send({ message: err.message });
+      } else {
+        return res.status(500).send({ message: 'Erro interno do servidor.' });
+      }
     }
   };
 

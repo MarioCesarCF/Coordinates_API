@@ -7,13 +7,7 @@ class CompanyRepository {
     Company.find(query).populate("user");
 
   countCompanies = () => Company.countDocuments();
-
-  getByName = ({ name }) => Company.find({ $text: { $search: `\"${name}"` } });
-
-  getByDocument = ({ document }) => Company.find({ document: document });
-
-  getByCity = ({ city }) => Company.find({ $text: { $search: `\"${city}"` } });
-
+  
   getById = (id) => Company.findById(id);
 
   updateComapny = (id, body) =>

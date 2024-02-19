@@ -59,7 +59,7 @@ class CompanyService {
     const companiesList = await companyRepository.getAllCompanies(query);
     
     if (companiesList.length === 0)
-      throw new Error("Não há clientes cadastrados.");
+      throw { status: 400, message: "Não há clientes cadastrados que correspondam a estes parâmetros."};
 
     const pageData = {
       results: companiesList.map((item) => ({
@@ -88,52 +88,7 @@ class CompanyService {
     }
 
     return company;
-  };  
-
-  findByName = async (nameParam) => {
-    const name = nameParam;
-
-    const company = await companyRepository.getByName({ name: name });
-
-    if (company.length === 0) {
-      throw new Error("Empresa com este nome não encontrada.");
-    }
-
-    return company;
-  };
-
-  findByDoc = async (docParam) => {
-    const document = docParam;
-
-    const documentIsNaN = isNaN(document);
-
-    if ((document.length !== 11 && document.length !== 14) || documentIsNaN)
-      throw new Error(
-        "Informe um número de documento válido. Informe apenas números."
-      );
-
-    const company = await companyRepository.getByDocument({
-      document: document,
-    });
-
-    if (company.length === 0) {
-      throw new Error("Empresa com este CNPJ/CPF não encontrada.");
-    }
-
-    return company;
-  };
-
-  findByCity = async (cityParam) => {
-    const city = cityParam;
-
-    const company = await companyRepository.getByCity({ city: city });
-
-    if (company.length === 0) {
-      throw new Error("Nenhuma empresa encontrada nesta cidade.");
-    }
-
-    return company;
-  };
+  };    
 
   update = async (body, companyId) => {
     const { name, document, city, coordinatesX, coordinatesY, informations } =

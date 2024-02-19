@@ -27,7 +27,11 @@ class CompanyController {
 
       return res.status(200).send(companies);
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      if (err.status && err.message) {
+        return res.status(err.status).send({ message: err.message });
+      } else {
+        return res.status(500).send({ message: 'Erro interno do servidor.' });
+      }
     }
   };
 
@@ -41,40 +45,7 @@ class CompanyController {
       res.status(500).send({ message: err.message });
     }
   };
-
-  findByName = async (req, res) => {
-    const { name } = req.params;
-    try {
-      const company = await companyService.findByName(name);
-
-      return res.status(200).send(company);
-    } catch (err) {
-      res.status(500).send({ message: err.message });
-    }
-  };
-
-  findByCnpjCpf = async (req, res) => {
-    const { document } = req.params;
-    try {
-      const company = await companyService.findByDoc(document);
-
-      return res.status(200).send(company);
-    } catch (err) {
-      res.status(500).send({ message: err.message });
-    }
-  };
-
-  findByCity = async (req, res) => {
-    const { city } = req.params;
-    try {
-      const company = await companyService.findByCity(city);
-
-      return res.status(200).send(company);
-    } catch (err) {
-      res.status(500).send({ message: err.message });
-    }
-  };
-
+  
   updateCompany = async (req, res) => {
     const body = req.body;
     const { id: companyId } = req.params;

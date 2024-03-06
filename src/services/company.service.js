@@ -24,6 +24,14 @@ class CompanyService {
     if ((document.length !== 11 && document.length !== 14) || documentIsNaN)
       throw { status: 400, message: "Informe um número de documento válido. Informe apenas números." };
 
+    const coordinatesXright = coordinatesX >= -90 && coordinatesX <= 90;
+    const coordinatesYright = coordinatesY >= -180 && coordinatesY <= 180;
+
+    if(!coordinatesXright || !coordinatesYright) {
+      throw { status: 400, message: "Informe coordenadas latitude entre -90 e 90 e longitude entre -180 e 180." };
+    }
+    
+
     const user = await userRepository.findByIdRepository(body.user);
 
     if (!user) {

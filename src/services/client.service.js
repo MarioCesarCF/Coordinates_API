@@ -43,7 +43,17 @@ class ClientService {
 
     if (clients.length === 0) throw new Error("Não há clientes cadastrados.");
 
-    return clients;
+    const pageData = {
+      results: clients.map((item) => ({
+        id: item._id,
+        name: item.name,
+        email: item.email,
+        document: item.document,
+        phone_number: item.phone_number,
+      })),
+    };
+
+    return pageData;
   };
 
   findById = async (clientId, clientIdLogged) => {

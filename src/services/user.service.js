@@ -42,7 +42,17 @@ class UserService {
 
     if (users.length === 0) throw new Error("Não há usuarios cadastrados.");
 
-    return users;
+    const pageData = {
+      results: users.map((item) => ({
+        id: item._id,
+        name: item.name,
+        email: item.email,
+        document: item.document,
+        usertype: item.usertype,
+      })),
+    };
+
+    return pageData;
   };  
 
   findById = async (userId, userIdLogged) => {

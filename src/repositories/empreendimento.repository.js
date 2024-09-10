@@ -11,7 +11,7 @@ class EmpreendimentoRepository {
           query[key] = { $regex: query[key], $options: 'i' };
       }
     }
-  return Empreendimento.find(query);
+    return Empreendimento.find(query);
   }
 
   getById = (id) => Empreendimento.findById(id);

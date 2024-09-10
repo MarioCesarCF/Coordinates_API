@@ -10,8 +10,8 @@ class EmpreendimentoService {
     
     body.situacao = true;
 
-    if (!razao_social || !ramo_atividade || !documento || !telefone || !nome_proprietario, !logradouro || !bairro)
-      throw { status: 400, message: "Preencha todos os campos obrigatórios." };
+    // if (!razao_social || !ramo_atividade || !documento || !telefone || !nome_proprietario, !logradouro || !bairro)
+    //   throw { status: 400, message: "Preencha todos os campos obrigatórios." };
 
     // const documentoIsNaN = isNaN(documento);
 
@@ -40,7 +40,7 @@ class EmpreendimentoService {
       throw { status: 400, message: "Não há empreendimentos cadastrados que correspondam a estes parâmetros."};
 
     const pageData = {
-      results: empreendimentosList.map((item) => ({
+      data: empreendimentosList.map((item) => ({
         id: item._id,
         nome_fantasia: item.nome_fantasia,
         razao_social: item.razao_social,

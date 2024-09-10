@@ -10,8 +10,8 @@ class EmpreendimentoService {
     
     body.situacao = true;
 
-    // if (!razao_social || !ramo_atividade || !documento || !telefone || !nome_proprietario, !logradouro || !bairro)
-    //   throw { status: 400, message: "Preencha todos os campos obrigatórios." };
+    if (!razao_social || !ramo_atividade || !documento || !telefone || !nome_proprietario, !logradouro || !bairro)
+      throw { status: 400, message: "Preencha todos os campos obrigatórios." };
 
     // const documentoIsNaN = isNaN(documento);
 

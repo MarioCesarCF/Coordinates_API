@@ -26,15 +26,16 @@ class EmpreendimentoService {
     };
   };
 
-  showAll = async (nome_fantasia, ramo_atividade, bairro) => {
+  showAll = async (nome_fantasia, ramo_atividade, bairro, situacao) => {
     let query = {};
   
     if (nome_fantasia) query.nome_fantasia = nome_fantasia;
     if (ramo_atividade) query.ramo_atividade = ramo_atividade;
     if (bairro) query.bairro = bairro;
+    if (situacao !== undefined) query.situacao = situacao;
 
-    const empreendimentosList = await empreendimentoRepository.findAllRepository();
-    //const empreendimentosList = await empreendimentoRepository.getAll(query);
+    //const empreendimentosList = await empreendimentoRepository.findAllRepository();
+    const empreendimentosList = await empreendimentoRepository.getAll(query);
     
     if (empreendimentosList.length === 0)
       throw { status: 400, message: "Não há empreendimentos cadastrados que correspondam a estes parâmetros."};

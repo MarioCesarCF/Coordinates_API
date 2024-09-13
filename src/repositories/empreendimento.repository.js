@@ -4,15 +4,35 @@ class EmpreendimentoRepository {
   createEmpreendimento = (empreendimento) => Empreendimento.create(empreendimento);
   findAllRepository = () => Empreendimento.find();
   
-  getAll = (query) =>{
-    // 'for' usado para buscar por qualquer correspondencia da string passada como query
+  getAll = async (query) => {
+    let adjustedQuery = {};
+    
     for (let key in query) {
-      if (typeof query[key] === 'string') {
-          query[key] = { $regex: query[key], $options: 'i' };
+      if (query.hasOwnProperty(key)) {
+        const value = query[key];
+  
+        switch (key) {
+          case 'nome_fantasia':
+          case 'ramo_atividade':
+          case 'bairro':
+            if (typeof value === 'string') {
+              adjustedQuery[key] = { $regex: value, $options: 'i' };
+            } else {
+              console.warn(`Filtro para ${key} deve ser uma string.`);
+            }
+            break;  
+          case 'situacao':
+            adjustedQuery[key] = value;
+            break;  
+          default:
+            console.warn(`Filtro para ${key} não é suportado.`);
+            break;
+        }
       }
     }
-    return Empreendimento.find(query);
-  }
+    
+    return Empreendimento.find(adjustedQuery);
+  };
 
   getById = (id) => Empreendimento.findById(id);
 

@@ -22,8 +22,9 @@ class EmpreendimentoController {
 
   showEmpreendimentos = async (req, res) => {
     try {
-      const { nome_fantasia, ramo_atividade, bairro } = req.query;
-      const empreendimentos = await empreendimentoService.showAll(nome_fantasia, ramo_atividade, bairro);
+      const { nome_fantasia, ramo_atividade, bairro, situacao } = req.query;
+    
+      const empreendimentos = await empreendimentoService.showAll(nome_fantasia, ramo_atividade, bairro, situacao);
 
       return res.status(200).send(empreendimentos);
     } catch (err) {      

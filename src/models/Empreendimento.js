@@ -13,11 +13,11 @@ const EmpreendimentoDataSchema = new mongoose.Schema({
     required: true,
   },
   documento: {
-    type: Number,
+    type: String,
     required: true,
   },
   telefone: {
-    type: Number,
+    type: String,
     required: true,
   },
   nome_proprietario: {

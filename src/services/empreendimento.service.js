@@ -26,20 +26,56 @@ class EmpreendimentoService {
     };
   };
 
-  showAll = async (nome_fantasia, ramo_atividade, bairro, situacao) => {
+  // showAll = async (nome_fantasia, ramo_atividade, bairro, situacao) => {
+  //   let query = {};
+  
+  //   if (nome_fantasia) query.nome_fantasia = nome_fantasia;
+  //   if (ramo_atividade) query.ramo_atividade = ramo_atividade;
+  //   if (bairro) query.bairro = bairro;
+  //   if (situacao !== undefined) query.situacao = situacao;
+
+  //   const empreendimentosList = await empreendimentoRepository.getAll(query);
+    
+  //   if (empreendimentosList.length === 0)
+  //     throw { status: 400, message: "Não há empreendimentos cadastrados que correspondam a estes parâmetros."};
+
+  //   const pageData = {
+  //     data: empreendimentosList.map((item) => ({
+  //       id: item._id,
+  //       nome_fantasia: item.nome_fantasia,
+  //       razao_social: item.razao_social,
+  //       ramo_atividade: item.ramo_atividade,
+  //       documento: item.documento,
+  //       telefone: item.telefone,
+  //       nome_proprietario: item.nome_proprietario,
+  //       responsavel_tecnico: item.responsavel_tecnico,
+  //       logradouro: item.logradouro,
+  //       numero: item.numero,
+  //       bairro: item.bairro,
+  //       situacao: item.situacao,
+  //     })),
+  //   };
+
+  //   return pageData;
+  // };
+
+  showAll = async (nome_fantasia, ramo_atividade, bairro, situacao, limit = 10, skip = 0) => {
     let query = {};
   
     if (nome_fantasia) query.nome_fantasia = nome_fantasia;
     if (ramo_atividade) query.ramo_atividade = ramo_atividade;
     if (bairro) query.bairro = bairro;
     if (situacao !== undefined) query.situacao = situacao;
-
-    //const empreendimentosList = await empreendimentoRepository.findAllRepository();
-    const empreendimentosList = await empreendimentoRepository.getAll(query);
-    
+  
+    // Aplicamos limit e skip aqui no serviço, após chamar o repositório
+    const empreendimentosList = await empreendimentoRepository
+      .getAll(query)
+      .limit(limit)  // Limita o número de resultados
+      .skip(skip);   // Pula um número de resultados
+  
     if (empreendimentosList.length === 0)
-      throw { status: 400, message: "Não há empreendimentos cadastrados que correspondam a estes parâmetros."};
-
+      throw { status: 400, message: "Não há empreendimentos cadastrados que correspondam a estes parâmetros." };
+  
     const pageData = {
       data: empreendimentosList.map((item) => ({
         id: item._id,
@@ -55,10 +91,17 @@ class EmpreendimentoService {
         bairro: item.bairro,
         situacao: item.situacao,
       })),
+      pagination: {
+        limit,
+        skip,
+        total: empreendimentosList.length,
+      },
     };
-
+  
     return pageData;
   };
+  
+
 
   findById = async (param) => {
     const empreendimentoId = param;

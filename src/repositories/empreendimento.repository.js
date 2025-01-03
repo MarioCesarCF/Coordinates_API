@@ -2,37 +2,6 @@ import Empreendimento from "../models/Empreendimento.js";
 
 class EmpreendimentoRepository {
   createEmpreendimento = (empreendimento) => Empreendimento.create(empreendimento);
-  findAllRepository = () => Empreendimento.find();
-  
-  // getAll = async (query) => {
-  //   let adjustedQuery = {};
-    
-  //   for (let key in query) {
-  //     if (query.hasOwnProperty(key)) {
-  //       const value = query[key];
-  
-  //       switch (key) {
-  //         case 'nome_fantasia':
-  //         case 'ramo_atividade':
-  //         case 'bairro':
-  //           if (typeof value === 'string') {
-  //             adjustedQuery[key] = { $regex: value, $options: 'i' };
-  //           } else {
-  //             console.warn(`Filtro para ${key} deve ser uma string.`);
-  //           }
-  //           break;  
-  //         case 'situacao':
-  //           adjustedQuery[key] = value;
-  //           break;  
-  //         default:
-  //           console.warn(`Filtro para ${key} não é suportado.`);
-  //           break;
-  //       }
-  //     }
-  //   }
-    
-  //   return Empreendimento.find(adjustedQuery);
-  // };
 
   getAll = (query) => {
     let adjustedQuery = {};
@@ -61,7 +30,6 @@ class EmpreendimentoRepository {
       }
     }
   
-    // Retorne a query Mongoose diretamente (sem await)
     return Empreendimento.find(adjustedQuery);
   };
   

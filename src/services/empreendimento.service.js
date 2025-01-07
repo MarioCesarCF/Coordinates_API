@@ -39,8 +39,8 @@ class EmpreendimentoService {
       .limit(limit)
       .skip(skip); 
   
-    if (empreendimentosList.length === 0)
-      throw { status: 400, message: "Não há empreendimentos cadastrados que correspondam a estes parâmetros." };
+    // if (empreendimentosList.length === 0)
+    //   throw { status: 400, message: "Não há empreendimentos cadastrados que correspondam a estes parâmetros." };
   
     const pageData = {
       data: empreendimentosList.map((item) => ({

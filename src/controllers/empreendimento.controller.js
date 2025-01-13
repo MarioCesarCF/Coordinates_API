@@ -1,3 +1,4 @@
+import { SearchDTO } from "../models/interfaces/SearchDTO.js";
 import EmpreendimentoService from "../services/empreendimento.service.js";
 
 const empreendimentoService = new EmpreendimentoService();
@@ -24,18 +25,12 @@ class EmpreendimentoController {
     try {
       const { nome_fantasia, ramo_atividade, bairro, situacao, limit, skip } = req.query;
   
-      // Garantir que limit e skip sejam números e tenham valores padrão se não forem enviados
-      const parsedLimit = parseInt(limit, 10) || 10;  // Define um limite padrão de 10
-      const parsedSkip = parseInt(skip, 10) || 0;     // Define um skip padrão de 0
+      const parsedLimit = parseInt(limit, 10) || 10;
+      const parsedSkip = parseInt(skip, 10) || 0;
+      
+      let params = new SearchDTO(nome_fantasia, ramo_atividade, bairro, situacao, parsedLimit, parsedSkip);
   
-      const empreendimentos = await empreendimentoService.showAll(
-        nome_fantasia, 
-        ramo_atividade, 
-        bairro, 
-        situacao, 
-        parsedLimit, 
-        parsedSkip
-      );
+      const empreendimentos = await empreendimentoService.showAll(params);
   
       return res.status(200).send(empreendimentos);
     } catch (err) {      

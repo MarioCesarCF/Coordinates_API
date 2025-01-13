@@ -26,19 +26,15 @@ class EmpreendimentoService {
     };
   };
 
-  showAll = async (nome_fantasia, ramo_atividade, bairro, situacao) => {
+  showAll = async (searchDTO) => {
     let query = {};
   
-    if (nome_fantasia) query.nome_fantasia = nome_fantasia;
-    if (ramo_atividade) query.ramo_atividade = ramo_atividade;
-    if (bairro) query.bairro = bairro;
-    if (situacao !== undefined) query.situacao = situacao;
+    if (searchDTO.nome_fantasia) query.nome_fantasia = searchDTO.nome_fantasia;
+    if (searchDTO.ramo_atividade) query.ramo_atividade = searchDTO.ramo_atividade;
+    if (searchDTO.bairro) query.bairro = searchDTO.bairro;
+    if (searchDTO.situacao !== undefined) query.situacao = searchDTO.situacao;
   
-    const empreendimentosList = await empreendimentoRepository
-    .getAll(query); 
-  
-    // if (empreendimentosList.length === 0)
-    //   throw { status: 400, message: "Não há empreendimentos cadastrados que correspondam a estes parâmetros." };
+    const empreendimentosList = await empreendimentoRepository.getAll(query); 
   
     const pageData = {
       data: empreendimentosList.map((item) => ({
@@ -54,6 +50,7 @@ class EmpreendimentoService {
         numero: item.numero,
         bairro: item.bairro,
         situacao: item.situacao,
+        updateAt: item.updatedAt
       })),
       pagination: {
         total: empreendimentosList.length,
@@ -76,8 +73,7 @@ class EmpreendimentoService {
   };    
 
   update = async (body, empreendimentoId) => {
-    const { nome_fantasia, razao_social, ramo_atividade, documento, telefone, nome_proprietario, responsavel_tecnico, logradouro, numero, bairro, situacao } =
-      body;
+    body.updatedAt = new Date();
 
     await empreendimentoRepository.updateRepository(empreendimentoId, body);
 

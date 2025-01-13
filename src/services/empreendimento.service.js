@@ -33,6 +33,7 @@ class EmpreendimentoService {
     if (searchDTO.ramo_atividade) query.ramo_atividade = searchDTO.ramo_atividade;
     if (searchDTO.bairro) query.bairro = searchDTO.bairro;
     if (searchDTO.situacao !== undefined) query.situacao = searchDTO.situacao;
+
   
     const empreendimentosList = await empreendimentoRepository.getAll(query); 
   

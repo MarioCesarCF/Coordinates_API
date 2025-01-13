@@ -4,7 +4,7 @@ export class SearchDTO {
         this.ramo_atividade = ramo_atividade;
         this.bairro = bairro;
         this.situacao = situacao;
-        this.limit = limit;
-        this.skip = skip;
+        // this.limit = limit;
+        // this.skip = skip;
     }
 }

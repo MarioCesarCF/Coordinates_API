@@ -23,12 +23,12 @@ class EmpreendimentoController {
 
   showEmpreendimentos = async (req, res) => {
     try {
-      const { nome_fantasia, ramo_atividade, bairro, situacao, limit, skip } = req.query;
+      const { nome_fantasia, ramo_atividade, bairro, situacao } = req.query;
   
-      const parsedLimit = parseInt(limit, 10) || 10;
-      const parsedSkip = parseInt(skip, 10) || 0;
+      // const parsedLimit = parseInt(limit, 10) || 10;
+      // const parsedSkip = parseInt(skip, 10) || 0;
       
-      let params = new SearchDTO(nome_fantasia, ramo_atividade, bairro, situacao, parsedLimit, parsedSkip);
+      let params = new SearchDTO(nome_fantasia, ramo_atividade, bairro, situacao);
   
       const empreendimentos = await empreendimentoService.showAll(params);
   

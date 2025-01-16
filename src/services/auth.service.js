@@ -13,9 +13,15 @@ class LoginService {
 
     if (!passwordIsValid) throw new Error("Email ou senha inválidos.");
 
-    const token = loginRepository.generateToken(user.id);
+    const token = await loginRepository.generateToken(user.id);
 
-    return token;
+    const data = {
+      token: token,
+      userName: user.name,
+      userId: user.id
+    }
+
+    return data;
   };
   loginClient = async (email, password) => {
     const client = await loginRepository.loginRepositoryClient(email);

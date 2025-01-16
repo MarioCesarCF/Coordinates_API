@@ -7,9 +7,9 @@ class LoginController {
     const { email, password } = req.body;
 
     try {
-      const token = await loginService.login(email, password);
+      const data = await loginService.login(email, password);
 
-      res.send({ token });
+      res.send({ data });
     } catch (err) {
       res.status(500).send(err.message);
     }

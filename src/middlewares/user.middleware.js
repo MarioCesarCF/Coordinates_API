@@ -35,3 +35,22 @@ export const validUser = async (req, res, next) => {
     res.status(500).send({ message: error.message });
   }
 }
+
+export const validEmail = async (req, res, next) => {
+  try {
+    const email = req.params.email;
+
+    const user = await userRepository.findByEmail(email);
+
+    if (!user || !user.id) {
+      return res.status(400).send({ message: "Usuario não encontrado!" });
+    }
+
+    req.id = user.id;
+    req.user = user;
+
+    next();
+   } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+}

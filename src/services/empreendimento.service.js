@@ -5,18 +5,13 @@ const empreendimentoRepository = new EmpreendimentoRepository();
 class EmpreendimentoService {
   create = async (body) => {
     const {
-      nome_fantasia, razao_social, ramo_atividade, documento, telefone, nome_proprietario, responsavel_tecnico, logradouro, numero, bairro
+      razao_social, ramo_atividade, documento, telefone, nome_proprietario, logradouro, bairro
     } = body;   
     
     body.situacao = true;
 
     if (!razao_social || !ramo_atividade || !documento || !telefone || !nome_proprietario, !logradouro || !bairro)
       throw { status: 400, message: "Preencha todos os campos obrigatórios." };
-
-    // const documentoIsNaN = isNaN(documento);
-
-    // if ((documento.length !== 11 && documento.length !== 14) || documentoIsNaN)
-    //   throw { status: 400, message: "Informe um número de documento válido. Informe apenas números." };  
 
     await empreendimentoRepository.createEmpreendimento(body);
 
@@ -51,6 +46,7 @@ class EmpreendimentoService {
         numero: item.numero,
         bairro: item.bairro,
         situacao: item.situacao,
+        criadoPor: item.criadoPor,
         updateAt: item.updatedAt
       })),
       pagination: {

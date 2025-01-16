@@ -27,10 +27,6 @@ const EmpreendimentoDataSchema = new mongoose.Schema({
   responsavel_tecnico: {
     type: String,
   },
-  updatedAt: {
-    type: Date,
-    default: Date.now(),
-  },
   logradouro: {
     type: String,
   },
@@ -42,6 +38,14 @@ const EmpreendimentoDataSchema = new mongoose.Schema({
   },
   situacao: {
     type: Boolean,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  criadoPor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
   }
 });
 

@@ -63,9 +63,9 @@ class CompanyService {
     if (name) query.name = name;
     if (document) query.document = document;
     if (city) query.city = city;
-
+       
     const companiesList = await companyRepository.getAllCompanies(query);
-    
+  
     if (companiesList.length === 0)
       throw { status: 400, message: "Não há clientes cadastrados que correspondam a estes parâmetros."};
 
@@ -78,11 +78,10 @@ class CompanyService {
         coordinatesX: item.coordinatesX,
         coordinatesY: item.coordinatesY,
         number_processo: item.number_processo,
-        informations: item.informations,
-        nameUser: item.user.name,
+        informations: item.informations
       })),
     };
-
+    
     return pageData;
   };
 
